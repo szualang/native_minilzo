@@ -1,0 +1,96 @@
+import 'dart:typed_data';
+
+import 'package:flutter/material.dart';
+import 'dart:async';
+
+import 'package:native_minilzo/native_minilzo.dart' as native_minilzo;
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late int sumResult;
+  late Future<int> sumAsyncResult;
+
+  @override
+  void initState() {
+    super.initState();
+    sumResult = native_minilzo.sum(1, 15);
+    //sumAsyncResult = native_minilzo.sumAsync(3, 4);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    const textStyle = TextStyle(fontSize: 25);
+    const spacerSmall = SizedBox(height: 10);
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Native Packages'),
+        ),
+        body: SingleChildScrollView(
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              children: [
+                const Text(
+                  'This calls a native function through FFI that is shipped as source in the package. '
+                  'The native code is built as part of the Flutter Runner build.',
+                  style: textStyle,
+                  textAlign: TextAlign.center,
+                ),
+                spacerSmall,
+                Text(
+                  'sum(1, 2) = $sumResult',
+                  style: textStyle,
+                  textAlign: TextAlign.center,
+                ),
+                spacerSmall,
+                // FutureBuilder<int>(
+                //   future: sumAsyncResult,
+                //   builder: (BuildContext context, AsyncSnapshot<int> value) {
+                //     final displayValue = (value.hasData) ? value.data : 'loading';
+                //     return Text(
+                //       'await sumAsync(3, 4) = $displayValue',
+                //       style: textStyle,
+                //       textAlign: TextAlign.center,
+                //     );
+                //   },
+                // ),
+                TextButton(
+                  onPressed: () {
+                    String demo = "your editor might support dart pub get or flutter pub get.";
+                    // final list = demo.codeUnits;
+                    final list = [0xa1,0x3f,0xe4,0x2b,0xd8,0x03,0x7c,0x56,0x90,0x45,0xe8,0xd3,0xf7,0x1d,0x62,0xb4,0x89,0x0e,0x71,0xc6,
+                      0x42,0x19,0xa9,0x5d,0x28,0x3b,0x64,0xf0,0x9a,0x77,0xce,0x59,0x4d,0x23,0xda,0x15,0x83,0x00,0xe2,0x75,
+                      0xb7,0x60,0xdd,0xf9,0x47,0x32,0x8c,0x24,0x1a,0xf4,0x7e,0x06,0x10,0x6f,0xc3,0x9d,0x51,0xa6,0x80,0xec,
+                      0x39,0xb1,0x48,0xcf,0xdf,0xa0,0x2e,0x67,0x6d,0x20,0xc0,0x97,0x5b,0x40,0x86,0xf2,0x0d,0xad,0x3d,0x69,
+                      0xdb,0x0a,0xfc,0x7d,0x26,0x9f,0x13,0x79,0x5f,0xe7,0x4a,0xc4,0xe1,0x49,0x09,0x99,0x2a,0x3e,0x53,0x88,
+                      0x70,0x02,0xb2,0x84,0xa3,0xaa,0x35,0x30,0x37,0x3c,0xfd,0xd5,0x93,0x2d,0x5a,0xcc,0xba,0x95,0xa7,0x7a,
+                      0xe9,0x8e,0x94,0x0f,0xe6,0xca,0x4e,0x2c,0xc9,0x7b,0x25,0x16,0xde,0x8b,0x29,0x0c,0x66,0x5c,0xd4,0xcb,
+                      0x3a,0xa5,0xeb,0x6c,0x17,0xbd,0xdc,0x57,0xd0,0xed,0x43,0x12,0x8a,0xf8,0x61,0xa8,0x1e,0xbe,0x73,0x96,
+                      0xfa,0x82,0x36,0xcd,0x34,0x46,0x41,0x6b,0x2f,0xea,0x9c,0x5e,0xbf,0xae,0xda,0x50,0x54,0xbb,0x63,0xf6,
+                      0x8d,0x08,0xe5,0xff,0x4c,0xdc,0x22,0x27,0x33,0xac,0xaf,0x65,0x0b,0x9e,0x85,0x38,0xe3,0x11,0x76,0xc1];
+                    final inData = Uint8List.fromList(list);
+                    native_minilzo.compress(inData, inData.length);
+
+                    //Uint8List bytes = Uint8List.fromList(data.asTypedList(lenght));
+                  },
+                  child: const Text('Enabled'),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
