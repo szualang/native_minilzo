@@ -7,6 +7,14 @@ import 'dart:typed_data';
 
 import 'native_minilzo_bindings_generated.dart';
 
+/// A struct for compress or decompress data, which used to trans
+class BitCompressData {
+  final Uint8List data;
+  final int len;
+
+  BitCompressData(this.data, this.len);
+}
+
 /// A very short-lived native function.
 ///
 /// For very short-lived functions, it is fine to call them on the main isolate.
@@ -14,25 +22,23 @@ import 'native_minilzo_bindings_generated.dart';
 /// only do this for native functions which are guaranteed to be short-lived.
 int sum(int a, int b) => _bindings.sum(a, b);
 
-/// OC原版
-// //数据压缩
-// + (BOOL)FMCompressData:(unsigned char *)inData inLen:(size_t)inLen outData:(unsigned char *)outData outLen:(size_t *)outLen;
-//
-// //数据解压缩
-// + (BOOL)FMDecompressData:(unsigned char *)inData inLen:(size_t)inLen outData:(unsigned char *)outData outLen:(size_t *)outLen;
-
-bool compress(Uint8List inData, int inLen) {
-// 分配内存空间
-  //final inDataPtr = calloc<ffi.Uint8>(inData.length);
+/// A function use for compress data by using minilzo
+///
+/// [inData] the data which should be compress
+/// [inLen] the size of data to compress
+BitCompressData compressData(Uint8List inData, int inLen) {
   // 将Uint8List的数据复制到分配的内存中
   final inDataPtr = _Uint8ListToPointer(inData);
-
-  final outDataPrr = calloc<ffi.Uint8>(inData.length);
+  final outDataPrr = calloc<ffi.Uint8>(inLen);
 
   final outLenPtr = calloc<ffi.Size>();
   outLenPtr.value = inLen;
 
   final result = _bindings.FMCompressData(inDataPtr.cast(), inLen, outDataPrr as ffi.Pointer<ffi.UnsignedChar>, outLenPtr);
+
+  if (result == 0) {
+    throw Exception("compress error");
+  }
 
   //把data转换成Uint8List深度拷贝过来，否则data释放后，Uint8List就是空的了
   Uint8List bytes = _PointerToUint8List(outDataPrr, outLenPtr.value);
@@ -42,26 +48,36 @@ bool compress(Uint8List inData, int inLen) {
   print(outLenPtr.value);
   print(result);
 
-  // 解压缩
-  final deInDataPtr = _Uint8ListToPointer(bytes);
-  final deOutDataPrr = calloc<ffi.Uint8>(bytes.length);
-  outLenPtr.value = bytes.length;
+  return BitCompressData(bytes, outLenPtr.value);
+}
 
-  final unzip = _bindings.FMDecompressData(deInDataPtr.cast(), bytes.length, deOutDataPrr.cast(), outLenPtr);
-  Uint8List deBytes = _PointerToUint8List(deOutDataPrr, outLenPtr.value);
 
-  print(deBytes);
-  print(String.fromCharCodes(deBytes));
+/// A function use for decompress data by using minilzo
+///
+/// [inData] the data which should be decompress
+/// [inLen] the size of data to decompress
+BitCompressData decompressData(Uint8List inData, int inLen) {
+  final inDataPtr = _Uint8ListToPointer(inData);
+  final outDataPrr = calloc<ffi.Uint8>(inLen);
+
+  final outLenPtr = calloc<ffi.Size>();
+  outLenPtr.value = inLen;
+
+  final result = _bindings.FMDecompressData(inDataPtr.cast(), inLen, outDataPrr as ffi.Pointer<ffi.UnsignedChar>, outLenPtr);
+
+  if (result == 0) {
+    throw Exception("compress error");
+  }
+
+  //把data转换成Uint8List深度拷贝过来，否则data释放后，Uint8List就是空的了
+  Uint8List bytes = _PointerToUint8List(outDataPrr, outLenPtr.value);
+
+  print(inLen);
+  print(bytes);
   print(outLenPtr.value);
-  print(unzip);
+  print(result);
 
-  // 当你完成使用后，记得释放内存
-  calloc.free(inDataPtr);
-  calloc.free(deInDataPtr);
-  calloc.free(outLenPtr);
-  calloc.free(deOutDataPrr);
-  calloc.free(outLenPtr);
-  return true;
+  return BitCompressData(bytes, outLenPtr.value);
 }
 
 ffi.Pointer _Uint8ListToPointer(Uint8List list){

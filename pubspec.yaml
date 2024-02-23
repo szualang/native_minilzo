@@ -1,6 +1,7 @@
 name: native_minilzo
 description: "A Flutter plugin project for minilzo."
-version: 0.0.1
+version: 0.0.2
+homepage: https://github.com/szualang/native_minilzo
 
 environment:
   sdk: '>=3.2.3 <4.0.0'
