@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:native_minilzo/native_minilzo.dart' as native_minilzo;
+import 'package:native_minilzo/native_minilzo.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,13 +17,10 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late int sumResult;
-  late Future<int> sumAsyncResult;
 
   @override
   void initState() {
     super.initState();
-    sumResult = native_minilzo.sum(1, 15);
     //sumAsyncResult = native_minilzo.sumAsync(3, 4);
   }
 
@@ -34,7 +31,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Native Packages'),
+          title: const Text('MiniLzo on Dart'),
         ),
         body: SingleChildScrollView(
           child: Container(
@@ -42,33 +39,14 @@ class _MyAppState extends State<MyApp> {
             child: Column(
               children: [
                 const Text(
-                  'This calls a native function through FFI that is shipped as source in the package. '
+                  'A Flutter plugin project for minilzo. '
                   'The native code is built as part of the Flutter Runner build.',
                   style: textStyle,
                   textAlign: TextAlign.center,
                 ),
                 spacerSmall,
-                Text(
-                  'sum(1, 2) = $sumResult',
-                  style: textStyle,
-                  textAlign: TextAlign.center,
-                ),
-                spacerSmall,
-                // FutureBuilder<int>(
-                //   future: sumAsyncResult,
-                //   builder: (BuildContext context, AsyncSnapshot<int> value) {
-                //     final displayValue = (value.hasData) ? value.data : 'loading';
-                //     return Text(
-                //       'await sumAsync(3, 4) = $displayValue',
-                //       style: textStyle,
-                //       textAlign: TextAlign.center,
-                //     );
-                //   },
-                // ),
                 TextButton(
                   onPressed: () {
-                    String demo = "your editor might support dart pub get or flutter pub get.";
-                    // final list = demo.codeUnits;
                     final list = [0xa1,0x3f,0xe4,0x2b,0xd8,0x03,0x7c,0x56,0x90,0x45,0xe8,0xd3,0xf7,0x1d,0x62,0xb4,0x89,0x0e,0x71,0xc6,
                       0x42,0x19,0xa9,0x5d,0x28,0x3b,0x64,0xf0,0x9a,0x77,0xce,0x59,0x4d,0x23,0xda,0x15,0x83,0x00,0xe2,0x75,
                       0xb7,0x60,0xdd,0xf9,0x47,0x32,0x8c,0x24,0x1a,0xf4,0x7e,0x06,0x10,0x6f,0xc3,0x9d,0x51,0xa6,0x80,0xec,
@@ -80,9 +58,12 @@ class _MyAppState extends State<MyApp> {
                       0xfa,0x82,0x36,0xcd,0x34,0x46,0x41,0x6b,0x2f,0xea,0x9c,0x5e,0xbf,0xae,0xda,0x50,0x54,0xbb,0x63,0xf6,
                       0x8d,0x08,0xe5,0xff,0x4c,0xdc,0x22,0x27,0x33,0xac,0xaf,0x65,0x0b,0x9e,0x85,0x38,0xe3,0x11,0x76,0xc1];
                     final inData = Uint8List.fromList(list);
-                    native_minilzo.compressData(inData, inData.length);
 
-                    //Uint8List bytes = Uint8List.fromList(data.asTypedList(lenght));
+                    /// sample for compress data
+                    final afterCompressList = compressData(inData, inData.length);
+
+                    /// sample for decompress data
+                    final afterDeCompressList = decompressData(inData, inData.length);
                   },
                   child: const Text('Enabled'),
                 )

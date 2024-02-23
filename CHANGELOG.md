@@ -1,3 +1,7 @@
-## 0.0.1
+## 0.0.3
+* modify output log and change readme.md
 
-* TODO: Describe initial release.
+## 0.0.2
+* change the function name
+
+## 0.0.1

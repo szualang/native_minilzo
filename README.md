@@ -1,92 +1,36 @@
 # native_minilzo
 
-A new Flutter project.
+A Flutter plugin project for minilzo.
 
 ## Getting Started
 
-This project is a starting point for a Flutter
-[FFI plugin](https://docs.flutter.dev/development/platform-integration/c-interop),
-a specialized package that includes native code directly invoked with Dart FFI.
+* Step1. follow the [installing page](https://pub.dev/packages/native_minilzo/install) 
 
-## Project structure
+* Step2. after install step, you can use bellow method to compress/decompress data
 
-This template uses the following structure:
+```dart
 
-* `src`: Contains the native source code, and a CmakeFile.txt file for building
-  that source code into a dynamic library.
+import 'package:native_minilzo/native_minilzo.dart';
 
-* `lib`: Contains the Dart code that defines the API of the plugin, and which
-  calls into the native code using `dart:ffi`.
+final list = [0xa1,0x3f,0xe4,0x2b,0xd8,0x03,0x7c,0x56,0x90,0x45,0xe8,0xd3,0xf7,0x1d,0x62,0xb4,0x89,0x0e,0x71,0xc6,
+                      0x42,0x19,0xa9,0x5d,0x28,0x3b,0x64,0xf0,0x9a,0x77,0xce,0x59,0x4d,0x23,0xda,0x15,0x83,0x00,0xe2,0x75,
+                      0xb7,0x60,0xdd,0xf9,0x47,0x32,0x8c,0x24,0x1a,0xf4,0x7e,0x06,0x10,0x6f,0xc3,0x9d,0x51,0xa6,0x80,0xec,
+                      0x39,0xb1,0x48,0xcf,0xdf,0xa0,0x2e,0x67,0x6d,0x20,0xc0,0x97,0x5b,0x40,0x86,0xf2,0x0d,0xad,0x3d,0x69,
+                      0xdb,0x0a,0xfc,0x7d,0x26,0x9f,0x13,0x79,0x5f,0xe7,0x4a,0xc4,0xe1,0x49,0x09,0x99,0x2a,0x3e,0x53,0x88,
+                      0x70,0x02,0xb2,0x84,0xa3,0xaa,0x35,0x30,0x37,0x3c,0xfd,0xd5,0x93,0x2d,0x5a,0xcc,0xba,0x95,0xa7,0x7a,
+                      0xe9,0x8e,0x94,0x0f,0xe6,0xca,0x4e,0x2c,0xc9,0x7b,0x25,0x16,0xde,0x8b,0x29,0x0c,0x66,0x5c,0xd4,0xcb,
+                      0x3a,0xa5,0xeb,0x6c,0x17,0xbd,0xdc,0x57,0xd0,0xed,0x43,0x12,0x8a,0xf8,0x61,0xa8,0x1e,0xbe,0x73,0x96,
+                      0xfa,0x82,0x36,0xcd,0x34,0x46,0x41,0x6b,0x2f,0xea,0x9c,0x5e,0xbf,0xae,0xda,0x50,0x54,0xbb,0x63,0xf6,
+                      0x8d,0x08,0xe5,0xff,0x4c,0xdc,0x22,0x27,0x33,0xac,0xaf,0x65,0x0b,0x9e,0x85,0x38,0xe3,0x11,0x76,0xc1];
+final inData = Uint8List.fromList(list);
 
-* platform folders (`android`, `ios`, `windows`, etc.): Contains the build files
-  for building and bundling the native code library with the platform application.
+/// sample for compress data
+final afterCompressList = compressData(inData, inData.length); 
 
-## Building and bundling native code
+/// sample for decompress data
+final afterDeCompressList = decompressData(inData, inData.length); 
 
-The `pubspec.yaml` specifies FFI plugins as follows:
-
-```yaml
-  plugin:
-    platforms:
-      some_platform:
-        ffiPlugin: true
 ```
 
-This configuration invokes the native build for the various target platforms
-and bundles the binaries in Flutter applications using these FFI plugins.
-
-This can be combined with dartPluginClass, such as when FFI is used for the
-implementation of one platform in a federated plugin:
-
-```yaml
-  plugin:
-    implements: some_other_plugin
-    platforms:
-      some_platform:
-        dartPluginClass: SomeClass
-        ffiPlugin: true
-```
-
-A plugin can have both FFI and method channels:
-
-```yaml
-  plugin:
-    platforms:
-      some_platform:
-        pluginClass: SomeName
-        ffiPlugin: true
-```
-
-The native build systems that are invoked by FFI (and method channel) plugins are:
-
-* For Android: Gradle, which invokes the Android NDK for native builds.
-  * See the documentation in android/build.gradle.
-* For iOS and MacOS: Xcode, via CocoaPods.
-  * See the documentation in ios/native_minilzo.podspec.
-  * See the documentation in macos/native_minilzo.podspec.
-* For Linux and Windows: CMake.
-  * See the documentation in linux/CMakeLists.txt.
-  * See the documentation in windows/CMakeLists.txt.
-
-## Binding to native code
-
-To use the native code, bindings in Dart are needed.
-To avoid writing these by hand, they are generated from the header file
-(`src/native_minilzo.h`) by `package:ffigen`.
-Regenerate the bindings by running `flutter pub run ffigen --config ffigen.yaml`.
-
-## Invoking native code
-
-Very short-running native functions can be directly invoked from any isolate.
-For example, see `sum` in `lib/native_minilzo.dart`.
-
-Longer-running functions should be invoked on a helper isolate to avoid
-dropping frames in Flutter applications.
-For example, see `sumAsync` in `lib/native_minilzo.dart`.
-
-## Flutter help
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+* Enjoy!
 
