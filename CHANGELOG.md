@@ -1,3 +1,6 @@
+## 0.0.4
+* move C file to ios Classes folder, ensure ios platform can use this plugin
+
 ## 0.0.3
 * modify output log and change readme.md
 
