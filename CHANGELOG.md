@@ -1,4 +1,4 @@
-## 0.0.4
+## 0.0.5
 * move C file to ios Classes folder, ensure ios platform can use this plugin
 
 ## 0.0.3
