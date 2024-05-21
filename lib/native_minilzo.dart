@@ -25,7 +25,7 @@ BitCompressData compressData(Uint8List inData, int inLen) {
   final outDataPrr = calloc<ffi.Uint8>(inLen);
 
   final outLenPtr = calloc<ffi.Size>();
-  outLenPtr.value = inLen;
+  // outLenPtr.value = inLen;
 
   final result = _bindings.FMCompressData(inDataPtr.cast(), inLen, outDataPrr as ffi.Pointer<ffi.UnsignedChar>, outLenPtr);
 
