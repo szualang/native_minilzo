@@ -2,6 +2,7 @@
 import 'dart:ffi' as ffi;
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
+import 'package:flutter/widgets.dart';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -36,10 +37,9 @@ BitCompressData compressData(Uint8List inData, int inLen) {
   //把data转换成Uint8List深度拷贝过来，否则data释放后，Uint8List就是空的了
   Uint8List bytes = _PointerToUint8List(outDataPrr, outLenPtr.value);
 
-  print('inLen size: $inLen');
-  print(bytes);
-  print('outLen size: ${outLenPtr.value}');
-  print(result);
+  debugPrint('minilzo compressData inLen size: $inLen');
+  debugPrint('minilzo compressData outLen size: ${outLenPtr.value}');
+  debugPrint('minilzo compressData status: $result');
 
   return BitCompressData(bytes, outLenPtr.value);
 }
