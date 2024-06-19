@@ -2,7 +2,7 @@
 import 'dart:ffi' as ffi;
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -23,7 +23,7 @@ class BitCompressData {
 BitCompressData compressData(Uint8List inData, int inLen) {
   // 将Uint8List的数据复制到分配的内存中
   final inDataPtr = _Uint8ListToPointer(inData);
-  final outDataPrr = calloc<ffi.Uint8>(inLen);
+  final outDataPrr = calloc<ffi.Uint8>(inLen * 2);
 
   final outLenPtr = calloc<ffi.Size>();
   // outLenPtr.value = inLen;
@@ -31,7 +31,7 @@ BitCompressData compressData(Uint8List inData, int inLen) {
   final result = _bindings.FMCompressData(inDataPtr.cast(), inLen, outDataPrr as ffi.Pointer<ffi.UnsignedChar>, outLenPtr);
 
   if (result == 0) {
-    throw Exception("compress error");
+    debugPrint("compress error");
   }
 
   //把data转换成Uint8List深度拷贝过来，否则data释放后，Uint8List就是空的了

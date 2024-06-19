@@ -1,3 +1,6 @@
+## 0.0.6
+* fix bug: compress data bigger then origin data
+
 ## 0.0.5
 * move C file to ios Classes folder, ensure ios platform can use this plugin
 
